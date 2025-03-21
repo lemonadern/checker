@@ -6,6 +6,9 @@ import { CSV_COLUMNS, CSV_FILES } from "./constants.ts";
 import { SyllabusTable } from "./components/SyllabusTable.tsx";
 import { GraduationRequirementChecker } from "./components/GraduationRequirementChecker.tsx";
 
+// LocalStorageのキー
+const STORAGE_KEY = "course-statuses";
+
 function App() {
   const [syllabusItems, setSyllabusItems] = useState<SyllabusItem[]>([]);
   // 科目番号をキーとして、履修状態を保存するオブジェクト
@@ -41,11 +44,25 @@ function App() {
         // すべてのデータをまとめてセット
         setSyllabusItems(allItems);
 
-        // 履修状態の初期値を設定（すべて未履修）
-        const initialStatuses: CourseStatusMap = {};
+        // LocalStorageから履修状態を取得
+        let initialStatuses: CourseStatusMap = {};
+        try {
+          const savedStatuses = localStorage.getItem(STORAGE_KEY);
+          if (savedStatuses) {
+            initialStatuses = JSON.parse(savedStatuses);
+            console.log("LocalStorageから履修状態を復元しました");
+          }
+        } catch (e) {
+          console.error("LocalStorageからの復元に失敗しました", e);
+        }
+
+        // 新しい科目があれば未履修として追加
         allItems.forEach((item) => {
-          initialStatuses[item.科目番号] = "未履修";
+          if (!initialStatuses[item.科目番号]) {
+            initialStatuses[item.科目番号] = "未履修";
+          }
         });
+        
         setCourseStatuses(initialStatuses);
       } catch (err) {
         setError(
@@ -59,6 +76,17 @@ function App() {
 
     loadCSVs();
   }, []);
+
+  // 履修状態が変更されるたびにLocalStorageに保存
+  useEffect(() => {
+    if (Object.keys(courseStatuses).length > 0) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(courseStatuses));
+      } catch (e) {
+        console.error("LocalStorageへの保存に失敗しました", e);
+      }
+    }
+  }, [courseStatuses]);
 
   // 履修状態が変更されたときの処理
   const handleStatusChange = (courseCode: string, newStatus: CourseStatus) => {

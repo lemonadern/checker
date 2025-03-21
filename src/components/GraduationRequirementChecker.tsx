@@ -37,6 +37,9 @@ export const GraduationRequirementChecker: React.FC<
         >
           {allSatisfied ? "合格" : "不合格"}
         </div>
+        <div className="text-gray-700 mt-1">
+          パスしたルール: {results.filter(result => result.satisfied).length}/{results.length}
+        </div>
       </div>
 
       {/* 個別の要件チェック結果 */}
