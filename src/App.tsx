@@ -1,34 +1,91 @@
 import './App.css'
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
+import { useState, useEffect } from 'react'
+import { parse } from "@std/csv";
+import { SyllabusItem, CourseStatus, CourseStatusMap } from './types.ts';
+import { CSV_COLUMNS, CSV_FILES } from './constants.ts';
+import { SyllabusTable } from './components/SyllabusTable.tsx';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [syllabusItems, setSyllabusItems] = useState<SyllabusItem[]>([]);
+  // 科目番号をキーとして、履修状態を保存するオブジェクト
+  const [courseStatuses, setCourseStatuses] = useState<CourseStatusMap>({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadCSVs = async () => {
+      try {
+        const allItems: SyllabusItem[] = [];
+
+        // 全てのCSVファイルを並行して読み込む
+        await Promise.all(
+          CSV_FILES.map(async (filePath) => {
+            const response = await fetch(filePath);
+            const text = await response.text();
+            
+            // 1行目（ヘッダー行）を除外
+            const lines = text.split("\n");
+            const csvText = lines.slice(1).join("\n");
+            
+            // Denoの標準ライブラリを使用してCSVをパース
+            const data = parse(csvText, {
+              columns: CSV_COLUMNS
+            });
+            
+            // 全てのアイテムを1つの配列に追加
+            allItems.push(...(data as SyllabusItem[]));
+          })
+        );
+        
+        // すべてのデータをまとめてセット
+        setSyllabusItems(allItems);
+
+        // 履修状態の初期値を設定（すべて未履修）
+        const initialStatuses: CourseStatusMap = {};
+        allItems.forEach(item => {
+          initialStatuses[item.科目番号] = '未履修';
+        });
+        setCourseStatuses(initialStatuses);
+      } catch (err) {
+        setError('CSVデータの読み込みに失敗しました: ' + (err instanceof Error ? err.message : String(err)));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadCSVs();
+  }, []);
+
+  // 履修状態が変更されたときの処理
+  const handleStatusChange = (courseCode: string, newStatus: CourseStatus) => {
+    setCourseStatuses((prev: CourseStatusMap) => ({
+      ...prev,
+      [courseCode]: newStatus
+    }));
+  };
 
   return (
-    <>
-      <img src="/vite-deno.svg" alt="Vite with Deno" />
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="flex w-full h-screen bg-[#fafafa] text-[#111]">
+      {/* 左側 */}
+      <div className="w-1/2 p-4 overflow-auto">
+        <h2 className="text-2xl font-bold mb-4">シラバスデータ</h2>
+        <SyllabusTable 
+          syllabusItems={syllabusItems}
+          courseStatuses={courseStatuses}
+          onStatusChange={handleStatusChange}
+          loading={loading}
+          error={error}
+        />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+      
+      {/* 右側 */}
+      <div className="w-1/2 bg-white border-l border-[#d0d0d0] p-4">
+        <h2 className="text-2xl font-bold mb-4">卒業要件チェッカー</h2>
+        <div className="flex items-center justify-center h-full text-lg">
+          ここに卒業要件の集計結果を表示します
+        </div>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </div>
   )
 }
 
