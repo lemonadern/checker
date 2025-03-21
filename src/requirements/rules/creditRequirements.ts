@@ -67,7 +67,7 @@ export const createCreditCheck = (
  * @param requiredCredits 必要な単位数
  * @param messagePrefix メッセージの接頭辞（「専攻科の〇〇科目」など）
  */
-const createAdvancedCourseCheck = (
+export const createAdvancedCourseCheck = (
   name: string,
   filterFn: (item: SyllabusItem) => boolean,
   requiredCredits: number,
