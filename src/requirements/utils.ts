@@ -30,4 +30,4 @@ export const filterIncompleteCourses = (
     const status = courseStatuses[course.科目番号] || "未履修";
     return status !== "単位取得済み" && status !== "履修予定";
   });
-}; 
+};

@@ -29,10 +29,16 @@ export const createAdvancedCourseCheck = (
     const filteredCourses = syllabusItems.filter(filterFn);
 
     // 単位取得済みまたは履修予定の科目
-    const completedCourses = filterCompletedCourses(filteredCourses, courseStatuses);
+    const completedCourses = filterCompletedCourses(
+      filteredCourses,
+      courseStatuses,
+    );
 
     // 未履修の科目
-    const incompleteCourses = filterIncompleteCourses(filteredCourses, courseStatuses);
+    const incompleteCourses = filterIncompleteCourses(
+      filteredCourses,
+      courseStatuses,
+    );
 
     // 単位数の合計を計算
     const totalCredits = completedCourses.reduce((sum, course) => {

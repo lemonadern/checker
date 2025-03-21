@@ -30,7 +30,7 @@ export const HUMANITIES_SOCIAL_SCIENCE_COURSES = [
   "保健体育ⅣＢ",
   "保健体育ⅤA",
   "保健体育ⅤB",
-  "ドイツ語"
+  "ドイツ語",
 ];
 
 /**
@@ -46,7 +46,7 @@ export const ENGLISH_COURSES = [
   "上級英語表現",
   "総合英語Ⅱ",
   "科学英語基礎ⅡA",
-  "科学英語基礎ⅡB"
+  "科学英語基礎ⅡB",
 ];
 
 /**
@@ -69,7 +69,7 @@ export const MATH_SCIENCE_COURSES = [
   "化学特論",
   "生物化学",
   "生体情報論",
-  "健康科学特論"
+  "健康科学特論",
 ];
 
 /**
@@ -81,7 +81,7 @@ export const INFORMATION_TECHNOLOGY_COURSES = [
   "信頼性工学",
   "都市地域解析論",
   "工業デザイン論",
-  "技術史"
+  "技術史",
 ];
 
 /**
@@ -98,7 +98,7 @@ export const COMPUTER_SYSTEM_COURSES = [
   "コンピュータシステム設計",
   "組込みシステム特論",
   "電子回路",
-  "電子工学"
+  "電子工学",
 ];
 
 /**
@@ -108,7 +108,7 @@ export const COMPUTER_SYSTEM_COURSES = [
 export const SYSTEM_PROGRAMMING_COURSES = [
   "アルゴリズムとデータ構造",
   "プログラミング言語論",
-  "ソフトウェア設計"
+  "ソフトウェア設計",
 ];
 
 /**
@@ -121,7 +121,7 @@ export const SYSTEM_PROGRAMMING_COURSES_FULL = [
   "システムプログラム",
   "コンパイラ",
   "ソフトウェア設計",
-  "ソフトウェア工学"
+  "ソフトウェア工学",
 ];
 
 /**
@@ -137,7 +137,7 @@ export const INFORMATION_COMMUNICATION_COURSES = [
   "制御工学",
   "情報回路理論",
   "情報ネットワーク論",
-  "ディジタル信号処理"
+  "ディジタル信号処理",
 ];
 
 /**
@@ -148,7 +148,7 @@ export const COMPUTER_APPLICATION_COURSES = [
   "知能メディア処理",
   "応用情報システム",
   "パターン情報処理",
-  "知識情報工学"
+  "知識情報工学",
 ];
 
 /**
@@ -157,7 +157,7 @@ export const COMPUTER_APPLICATION_COURSES = [
  */
 export const MATHEMATICAL_SCIENCE_COURSES = [
   "情報数学Ⅰ",
-  "情報数学Ⅱ"
+  "情報数学Ⅱ",
 ];
 
 /**
@@ -166,11 +166,11 @@ export const MATHEMATICAL_SCIENCE_COURSES = [
  */
 export const MATHEMATICAL_SCIENCE_COURSES_FULL = [
   "数値解析",
-  "情報数学Ⅰ", 
+  "情報数学Ⅰ",
   "情報数学Ⅱ",
   "システム工学",
   "情報数学特論I",
-  "情報数学特論Ⅱ"
+  "情報数学特論Ⅱ",
 ];
 
 /**
@@ -183,5 +183,5 @@ export const EXPERIMENT_PRACTICE_REQUIRED_COURSES = [
   "情報科学実験",
   "卒業研究",
   "特別研究Ⅰ",
-  "特別研究Ⅱ"
-]; 
+  "特別研究Ⅱ",
+];

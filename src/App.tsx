@@ -62,7 +62,7 @@ function App() {
             initialStatuses[item.科目番号] = "未履修";
           }
         });
-        
+
         setCourseStatuses(initialStatuses);
       } catch (err) {
         setError(

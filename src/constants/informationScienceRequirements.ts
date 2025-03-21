@@ -20,5 +20,5 @@ export const INFORMATION_SCIENCE_REQUIRED_COURSES = [
   "知識情報工学",
   "情報科学実験",
   "特別研究Ⅰ",
-  "特別研究Ⅱ"
-]; 
+  "特別研究Ⅱ",
+];

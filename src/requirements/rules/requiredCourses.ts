@@ -20,10 +20,16 @@ export const checkRequiredCourses: RequirementCheckFn = (
   );
 
   // 単位を修得済みまたは履修予定の必履修科目
-  const completedCourses = filterCompletedCourses(requiredCourses, courseStatuses);
+  const completedCourses = filterCompletedCourses(
+    requiredCourses,
+    courseStatuses,
+  );
 
   // 未履修の必履修科目
-  const uncompletedCourses = filterIncompleteCourses(requiredCourses, courseStatuses);
+  const uncompletedCourses = filterIncompleteCourses(
+    requiredCourses,
+    courseStatuses,
+  );
 
   const satisfied = uncompletedCourses.length === 0;
 
@@ -57,10 +63,16 @@ export const createRequiredCoursesCreditsCheck = (): RequirementCheckFn => {
     );
 
     // 単位取得済みまたは履修予定の必修科目
-    const completedCourses = filterCompletedCourses(requiredCourses, courseStatuses);
+    const completedCourses = filterCompletedCourses(
+      requiredCourses,
+      courseStatuses,
+    );
 
     // 未履修の必修科目
-    const incompleteCourses = filterIncompleteCourses(requiredCourses, courseStatuses);
+    const incompleteCourses = filterIncompleteCourses(
+      requiredCourses,
+      courseStatuses,
+    );
 
     // すべての必修科目を履修しているかどうか
     const satisfied = incompleteCourses.length === 0;

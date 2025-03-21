@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { CourseStatus, CourseStatusMap, SyllabusItem } from "../types.ts";
 
 interface SyllabusTableProps {
@@ -19,42 +19,45 @@ export const SyllabusTable: React.FC<SyllabusTableProps> = ({
   // フィルターの状態
   const [courseTypeFilter, setCourseTypeFilter] = useState<string>("すべて");
   const [gradeFilter, setGradeFilter] = useState<string>("すべて");
-  
+
   // 選択状態の管理
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
   const [bulkStatus, setBulkStatus] = useState<CourseStatus>("未履修");
-  
+
   // 本科/専攻科の一覧を取得
   const courseTypes = useMemo(() => {
     const types = new Set<string>();
-    syllabusItems.forEach(item => {
+    syllabusItems.forEach((item) => {
       types.add(item.本科または専攻科);
     });
     return ["すべて", ...Array.from(types)];
   }, [syllabusItems]);
-  
+
   // 学年の一覧を取得
   const grades = useMemo(() => {
     const gradesSet = new Set<string>();
-    syllabusItems.forEach(item => {
+    syllabusItems.forEach((item) => {
       gradesSet.add(item.学年);
     });
     return ["すべて", ...Array.from(gradesSet).sort()];
   }, [syllabusItems]);
-  
+
   // フィルタリングされたアイテム
   const filteredItems = useMemo(() => {
-    return syllabusItems.filter(item => {
+    return syllabusItems.filter((item) => {
       // 本科/専攻科でフィルタリング
-      if (courseTypeFilter !== "すべて" && item.本科または専攻科 !== courseTypeFilter) {
+      if (
+        courseTypeFilter !== "すべて" &&
+        item.本科または専攻科 !== courseTypeFilter
+      ) {
         return false;
       }
-      
+
       // 学年でフィルタリング
       if (gradeFilter !== "すべて" && item.学年 !== gradeFilter) {
         return false;
       }
-      
+
       return true;
     });
   }, [syllabusItems, courseTypeFilter, gradeFilter]);
@@ -137,8 +140,10 @@ export const SyllabusTable: React.FC<SyllabusTableProps> = ({
   }
 
   // 全て選択されているかどうか
-  const isAllSelected = filteredItems.length > 0 && 
-    filteredItems.every((item: SyllabusItem) => selectedItems.has(item.科目番号));
+  const isAllSelected = filteredItems.length > 0 &&
+    filteredItems.every((item: SyllabusItem) =>
+      selectedItems.has(item.科目番号)
+    );
 
   // 選択件数
   const selectedCount = selectedItems.size;
@@ -148,7 +153,9 @@ export const SyllabusTable: React.FC<SyllabusTableProps> = ({
       {/* フィルターUI */}
       <div className="mb-4 flex flex-wrap gap-4">
         <div className="flex items-center">
-          <label htmlFor="courseTypeFilter" className="mr-2 font-medium">区分:</label>
+          <label htmlFor="courseTypeFilter" className="mr-2 font-medium">
+            区分:
+          </label>
           <select
             id="courseTypeFilter"
             className="p-2 border border-[#d0d0d0] rounded bg-white focus:ring-2 focus:ring-[#000] focus:outline-none"
@@ -160,9 +167,11 @@ export const SyllabusTable: React.FC<SyllabusTableProps> = ({
             ))}
           </select>
         </div>
-        
+
         <div className="flex items-center">
-          <label htmlFor="gradeFilter" className="mr-2 font-medium">学年:</label>
+          <label htmlFor="gradeFilter" className="mr-2 font-medium">
+            学年:
+          </label>
           <select
             id="gradeFilter"
             className="p-2 border border-[#d0d0d0] rounded bg-white focus:ring-2 focus:ring-[#000] focus:outline-none"
@@ -174,18 +183,20 @@ export const SyllabusTable: React.FC<SyllabusTableProps> = ({
             ))}
           </select>
         </div>
-        
+
         <div className="ml-auto text-sm text-gray-600">
           表示: {filteredItems.length}科目 / 全{syllabusItems.length}科目
         </div>
       </div>
-      
+
       {/* 一括更新UI */}
       {selectedCount > 0 && (
         <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded flex items-center gap-3">
           <span className="font-medium">{selectedCount}科目を選択中</span>
           <select
-            className={`p-2 border border-[#d0d0d0] rounded ${getSelectBgColor(bulkStatus)} focus:ring-2 focus:ring-[#000] focus:outline-none`}
+            className={`p-2 border border-[#d0d0d0] rounded ${
+              getSelectBgColor(bulkStatus)
+            } focus:ring-2 focus:ring-[#000] focus:outline-none`}
             value={bulkStatus}
             onChange={(e) => setBulkStatus(e.target.value as CourseStatus)}
           >
@@ -209,7 +220,7 @@ export const SyllabusTable: React.FC<SyllabusTableProps> = ({
           </button>
         </div>
       )}
-      
+
       <table className="min-w-full bg-white border border-[#d0d0d0]">
         <thead>
           <tr className="bg-[#fafafa]">
@@ -244,21 +255,26 @@ export const SyllabusTable: React.FC<SyllabusTableProps> = ({
             <tr
               key={index}
               className={`${getStatusBgColor(courseStatuses[item.科目番号])} ${
-                selectedItems.has(item.科目番号) ? "bg-opacity-70 border-l-4 border-blue-500" : ""
+                selectedItems.has(item.科目番号)
+                  ? "bg-opacity-70 border-l-4 border-blue-500"
+                  : ""
               }`}
             >
               <td className="border-b border-[#d0d0d0] px-4 py-2">
                 <input
                   type="checkbox"
                   checked={selectedItems.has(item.科目番号)}
-                  onChange={(e) => toggleSelectItem(item.科目番号, e.target.checked)}
+                  onChange={(e) =>
+                    toggleSelectItem(item.科目番号, e.target.checked)}
                   className="w-4 h-4 accent-blue-500"
                 />
               </td>
               <td className="border-b border-[#d0d0d0] px-4 py-2">
                 {item.本科または専攻科}
               </td>
-              <td className="border-b border-[#d0d0d0] px-4 py-2">{item.学年}</td>
+              <td className="border-b border-[#d0d0d0] px-4 py-2">
+                {item.学年}
+              </td>
               <td className="border-b border-[#d0d0d0] px-4 py-2">
                 {item.授業科目}
               </td>
@@ -272,7 +288,10 @@ export const SyllabusTable: React.FC<SyllabusTableProps> = ({
                   } focus:ring-2 focus:ring-[#000] focus:outline-none`}
                   value={courseStatuses[item.科目番号] || "未履修"}
                   onChange={(e) =>
-                    onStatusChange(item.科目番号, e.target.value as CourseStatus)}
+                    onStatusChange(
+                      item.科目番号,
+                      e.target.value as CourseStatus,
+                    )}
                 >
                   <option value="未履修">未履修</option>
                   <option value="単位取得済み">単位取得済み</option>

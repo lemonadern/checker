@@ -13,23 +13,23 @@ export {
 } from "./creditRequirements.ts";
 
 // JABEE要件チェック
-export { 
-  checkJabeeHumanitiesSocialScienceRequirement,
-  checkJabeeEnglishRequirement,
-  checkJabeeMathScienceRequirement,
-  checkJabeeInformationTechnologyRequirement,
+export {
+  checkJabeeComputerApplicationRequirement,
   checkJabeeComputerArchitectureRequirement,
   checkJabeeComputerSystemCoursesRequirement,
-  checkJabeeSystemProgrammingRequirement,
-  checkJabeeSystemProgrammingFullRequirement,
+  checkJabeeEnglishRequirement,
+  checkJabeeExperimentPracticeRequirement,
+  checkJabeeHumanitiesSocialScienceRequirement,
   checkJabeeInformationCommunicationRequirement,
-  checkJabeeComputerApplicationRequirement,
-  checkJabeeMathematicalScienceRequirement,
+  checkJabeeInformationTechnologyRequirement,
   checkJabeeMathematicalScienceFullRequirement,
-  checkJabeeExperimentPracticeRequirement
+  checkJabeeMathematicalScienceRequirement,
+  checkJabeeMathScienceRequirement,
+  checkJabeeSystemProgrammingFullRequirement,
+  checkJabeeSystemProgrammingRequirement,
 } from "./jabeeRequirements.ts";
 
 // 情報科学プログラム要件チェック
 export {
-  checkInformationScienceRequiredCourses
+  checkInformationScienceRequiredCourses,
 } from "./informationScienceRequirements.ts";
