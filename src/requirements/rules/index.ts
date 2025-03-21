@@ -2,4 +2,9 @@
 export { checkRequiredCourses } from "./requiredCourses.ts";
 
 // 単位数チェック
-export { createCreditCheck } from "./creditRequirements.ts";
+export { 
+  createAdvancedCourseGraduationCheck,
+  createAdvancedCourseGeneralCreditsCheck,
+  createAdvancedCourseSpecialtyRelatedCreditsCheck,
+  createAdvancedCourseSpecialtyCreditsCheck
+} from "./creditRequirements.ts";

@@ -67,21 +67,39 @@ export const GraduationRequirementChecker: React.FC<
           </div>
           <p className="text-gray-700">{result.message}</p>
 
-          {/* 未履修の必履修科目などの詳細表示 */}
-          {!result.satisfied && result.details?.items &&
-            result.details.items.length > 0 && (
+          {/* 詳細情報表示 */}
+          {result.details && (
             <div className="mt-2">
               <h4 className="font-semibold text-lg mb-1">詳細情報</h4>
-              <ul className="bg-gray-50 p-3 border border-gray-200 rounded max-h-32 overflow-y-auto">
-                {result.details.items.map((
-                  item: SyllabusItem,
-                  itemIndex: number,
-                ) => (
-                  <li key={itemIndex} className="mb-1 text-red-600">
-                    {item.授業科目}
-                  </li>
-                ))}
-              </ul>
+              <div className="space-y-3">
+                {/* 単位取得済み・履修予定の科目 */}
+                {result.details.completedItems && result.details.completedItems.length > 0 && (
+                  <div>
+                    <h5 className="font-medium">取得済み・履修予定の科目</h5>
+                    <ul className="bg-gray-50 p-3 border border-gray-200 rounded max-h-32 overflow-y-auto">
+                      {result.details.completedItems.map((item, itemIndex) => (
+                        <li key={`complete-${itemIndex}`} className="mb-1 text-green-600">
+                          {item.授業科目} ({item.単位数}単位)
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* 未取得の科目 */}
+                {result.details.incompleteItems && result.details.incompleteItems.length > 0 && (
+                  <div>
+                    <h5 className="font-medium">未取得の科目</h5>
+                    <ul className="bg-gray-50 p-3 border border-gray-200 rounded max-h-32 overflow-y-auto">
+                      {result.details.incompleteItems.map((item, itemIndex) => (
+                        <li key={`incomplete-${itemIndex}`} className="mb-1 text-red-600">
+                          {item.授業科目} ({item.単位数}単位)
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </div>

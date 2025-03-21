@@ -34,7 +34,8 @@ export interface RequirementCheckResult {
   details?: { // 詳細情報（オプション）
     total?: number; // 必要な総数
     completed?: number; // 完了した数
-    items?: SyllabusItem[]; // 関連するシラバスアイテム
+    completedItems?: SyllabusItem[]; // 単位取得済みまたは履修予定の科目
+    incompleteItems?: SyllabusItem[]; // 未履修の科目
   };
 }
 
