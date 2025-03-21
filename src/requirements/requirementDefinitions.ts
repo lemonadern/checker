@@ -1,10 +1,11 @@
 import { RequirementCheckFn } from "../types.ts";
-import { 
-  checkRequiredCourses, 
-  createAdvancedCourseGraduationCheck,
+import {
+  checkRequiredCourses,
   createAdvancedCourseGeneralCreditsCheck,
+  createAdvancedCourseGraduationCheck,
+  createAdvancedCourseSpecialtyCreditsCheck,
   createAdvancedCourseSpecialtyRelatedCreditsCheck,
-  createAdvancedCourseSpecialtyCreditsCheck
+  createRequiredCoursesCreditsCheck,
 } from "./rules/index.ts";
 
 /**
@@ -17,15 +18,17 @@ export const requirementChecks: RequirementCheckFn[] = [
 
   // 専攻科終了要件チェック
   createAdvancedCourseGraduationCheck(),
-  
+
   // 専攻科一般科目要件チェック
   createAdvancedCourseGeneralCreditsCheck(),
-  
+
   // 専攻科専門関連科目要件チェック
   createAdvancedCourseSpecialtyRelatedCreditsCheck(),
-  
+
   // 専攻科専門科目要件チェック
   createAdvancedCourseSpecialtyCreditsCheck(),
-  
+
+  // 必修科目単位要件チェック
+  createRequiredCoursesCreditsCheck(),
   // TODO: 他の要件チェック関数を追加
 ];

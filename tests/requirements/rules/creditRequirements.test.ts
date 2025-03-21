@@ -141,4 +141,4 @@ describe("createAdvancedCourseCheck", () => {
     assertEquals(result.details?.completedItems?.length, 1);
     assertEquals(result.details?.incompleteItems?.length, 1);
   });
-}); 
+});

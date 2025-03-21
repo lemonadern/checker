@@ -1,8 +1,8 @@
 /// <reference lib="deno.ns" />
 import { beforeAll, describe, it } from "@std/testing/bdd";
 import { parse } from "@std/csv/parse";
-import { CSV_COLUMNS } from "./constants.ts";
-import { SyllabusItem } from "./types.ts";
+import { CSV_COLUMNS } from "../src/constants.ts";
+import { SyllabusItem } from "../src/types.ts";
 import { assertEquals } from "@std/assert";
 
 // 学則 p.50
@@ -62,33 +62,33 @@ describe("専攻科要件のテスト", () => {
         assertEquals(course.学科, "専攻共通");
       }
     });
-    
+
     it("専攻共通の専門科目数は7で、単位数総計は16であること", () => {
       const courses = syllabusJData.filter((item) =>
-        item.学科 === "専攻共通"
-        && item.科における科目種 === "専門科目"
+        item.学科 === "専攻共通" &&
+        item.科における科目種 === "専門科目"
       );
       assertEquals(courses.length, 7);
-      
+
       const totalUnits = courses.reduce(
         (sum, item) => sum + Number(item.単位数),
         0,
       );
       assertEquals(totalUnits, 16);
     });
-    
+
     it("情報科学専攻の専門科目数は14であること", () => {
       const specialCourses = syllabusJData.filter((item) =>
-        item.学科 === "情報科学専攻"
-        && item.科における科目種 === "専門科目"
+        item.学科 === "情報科学専攻" &&
+        item.科における科目種 === "専門科目"
       );
       assertEquals(specialCourses.length, 14);
     });
 
     it("情報科学専攻の専門科目の単位数総計は38であること", () => {
       const specialCourses = syllabusJData.filter((item) =>
-        item.学科 === "情報科学専攻"
-        && item.科における科目種 === "専門科目"
+        item.学科 === "情報科学専攻" &&
+        item.科における科目種 === "専門科目"
       );
       const totalUnits = specialCourses.reduce(
         (sum, item) => sum + Number(item.単位数),
@@ -96,6 +96,5 @@ describe("専攻科要件のテスト", () => {
       );
       assertEquals(totalUnits, 38);
     });
-    
   });
 });

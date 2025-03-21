@@ -4,7 +4,9 @@
     "build": "deno run -A --node-modules-dir npm:vite build",
     "preview": "deno run -A --node-modules-dir npm:vite preview",
     "serve": "deno run --allow-net --allow-read jsr:@std/http@1/file-server dist/",
-    "test": "deno test -A src/**/*_tests.ts"
+    "test": "deno test --allow-read",
+    "test:watch": "deno test --watch --allow-read",
+    "fmt": "deno fmt src"
   },
   "compilerOptions": {
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
