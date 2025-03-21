@@ -11,3 +11,25 @@ export {
   createAdvancedCourseSpecialtyCreditsCheck,
   createAdvancedCourseSpecialtyRelatedCreditsCheck,
 } from "./creditRequirements.ts";
+
+// JABEE要件チェック
+export { 
+  checkJabeeHumanitiesSocialScienceRequirement,
+  checkJabeeEnglishRequirement,
+  checkJabeeMathScienceRequirement,
+  checkJabeeInformationTechnologyRequirement,
+  checkJabeeComputerArchitectureRequirement,
+  checkJabeeComputerSystemCoursesRequirement,
+  checkJabeeSystemProgrammingRequirement,
+  checkJabeeSystemProgrammingFullRequirement,
+  checkJabeeInformationCommunicationRequirement,
+  checkJabeeComputerApplicationRequirement,
+  checkJabeeMathematicalScienceRequirement,
+  checkJabeeMathematicalScienceFullRequirement,
+  checkJabeeExperimentPracticeRequirement
+} from "./jabeeRequirements.ts";
+
+// 情報科学プログラム要件チェック
+export {
+  checkInformationScienceRequiredCourses
+} from "./informationScienceRequirements.ts";
