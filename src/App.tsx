@@ -15,6 +15,8 @@ function App() {
   const [courseStatuses, setCourseStatuses] = useState<CourseStatusMap>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  // スマホ表示時のアコーディオン状態
+  const [isDataExpanded, setIsDataExpanded] = useState(true);
 
   useEffect(() => {
     const loadCSVs = async () => {
@@ -96,23 +98,67 @@ function App() {
     }));
   };
 
+  // アコーディオンの状態を切り替え
+  const toggleDataExpanded = () => {
+    setIsDataExpanded(!isDataExpanded);
+  };
+
   return (
-    <div className="flex flex-col w-full h-screen bg-[#fafafa] text-[#111]">
-      <div className="flex flex-1 overflow-hidden">
-        {/* 左側 */}
-        <div className="w-1/2 p-4 overflow-auto">
-          <h2 className="text-2xl font-bold mb-4">シラバスデータ</h2>
-          <SyllabusTable
-            syllabusItems={syllabusItems}
-            courseStatuses={courseStatuses}
-            onStatusChange={handleStatusChange}
-            loading={loading}
-            error={error}
-          />
+    <div className="flex flex-col w-full min-h-screen bg-[#fafafa] text-[#111]">
+      {/* メインコンテンツ - スマホでは縦並び、PCでは横並び */}
+      <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
+        {/* シラバスデータセクション - スマホでは全幅、PCでは半分 */}
+        <div className="w-full md:w-1/2 overflow-hidden">
+          {/* シラバスデータのヘッダー（スマホでアコーディオン機能付き） */}
+          <div className="p-4 bg-white border-b border-[#d0d0d0]">
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-bold">シラバスデータ</h2>
+              <button
+                className="md:hidden bg-gray-200 hover:bg-gray-300 rounded-full p-2 focus:outline-none"
+                onClick={toggleDataExpanded}
+                aria-expanded={isDataExpanded}
+                aria-controls="syllabus-data"
+              >
+                <svg
+                  className={`w-6 h-6 transform transition-transform duration-200 ${
+                    isDataExpanded ? "rotate-180" : ""
+                  }`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          {/* シラバスデータ本体（スマホでは折りたたみ可能） */}
+          <div
+            id="syllabus-data"
+            className={`p-4 overflow-auto transition-all duration-300 ease-in-out ${
+              isDataExpanded
+                ? "max-h-[80vh] md:max-h-none opacity-100"
+                : "max-h-0 opacity-0 overflow-hidden md:max-h-[80vh] md:opacity-100"
+            }`}
+          >
+            <SyllabusTable
+              syllabusItems={syllabusItems}
+              courseStatuses={courseStatuses}
+              onStatusChange={handleStatusChange}
+              loading={loading}
+              error={error}
+            />
+          </div>
         </div>
 
-        {/* 右側 */}
-        <div className="w-1/2 bg-white border-l border-[#d0d0d0] p-4 overflow-auto">
+        {/* 卒業要件チェッカーセクション - スマホでは全幅、PCでは半分 */}
+        <div className="w-full md:w-1/2 bg-white border-t md:border-t-0 md:border-l border-[#d0d0d0] p-4 overflow-auto">
           <h2 className="text-2xl font-bold mb-4">卒業要件チェッカー</h2>
           {loading
             ? <p className="text-center py-8">読み込み中...</p>
@@ -129,9 +175,9 @@ function App() {
 
       {/* フッター */}
       <footer className="py-3 px-4 border-t border-[#d0d0d0] bg-white text-center text-sm text-gray-600">
-        <div className="flex justify-center items-center space-x-2">
+        <div className="flex flex-wrap justify-center items-center gap-2">
           <span>豊田高専専攻科 卒業要件チェッカー</span>
-          <span className="text-gray-400">|</span>
+          <span className="text-gray-400 hidden md:inline">|</span>
           <a
             href="https://github.com/lemonadern/checker"
             target="_blank"

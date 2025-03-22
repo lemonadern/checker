@@ -25,6 +25,9 @@ export const SyllabusTable: React.FC<SyllabusTableProps> = ({
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
   const [bulkStatus, setBulkStatus] = useState<CourseStatus>("未履修");
 
+  // 展開状態の管理（スマホ表示用）
+  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
+
   // 本科/専攻科の一覧を取得
   const courseTypes = useMemo(() => {
     const types = new Set<string>();
@@ -104,6 +107,17 @@ export const SyllabusTable: React.FC<SyllabusTableProps> = ({
       newSelectedItems.delete(courseCode);
     }
     setSelectedItems(newSelectedItems);
+  };
+
+  // 行の展開/折りたたみを切り替え
+  const toggleRowExpand = (courseCode: string) => {
+    const newExpandedRows = new Set(expandedRows);
+    if (expandedRows.has(courseCode)) {
+      newExpandedRows.delete(courseCode);
+    } else {
+      newExpandedRows.add(courseCode);
+    }
+    setExpandedRows(newExpandedRows);
   };
 
   // 選択したアイテムの一括更新
@@ -255,89 +269,204 @@ export const SyllabusTable: React.FC<SyllabusTableProps> = ({
         </div>
       )}
 
-      <table className="min-w-full bg-white border border-[#d0d0d0]">
-        <thead>
-          <tr className="bg-[#fafafa]">
-            <th className="border-b border-[#d0d0d0] px-4 py-2 text-left">
-              <input
-                type="checkbox"
-                checked={isAllSelected}
-                onChange={(e) => toggleSelectAll(e.target.checked)}
-                className="w-4 h-4 accent-blue-500"
-                title="全て選択/解除"
-              />
-            </th>
-            <th className="border-b border-[#d0d0d0] px-4 py-2 text-left">
-              本科または専攻科
-            </th>
-            <th className="border-b border-[#d0d0d0] px-4 py-2 text-left">
-              学年
-            </th>
-            <th className="border-b border-[#d0d0d0] px-4 py-2 text-left">
-              授業科目
-            </th>
-            <th className="border-b border-[#d0d0d0] px-4 py-2 text-left">
-              単位数
-            </th>
-            <th className="border-b border-[#d0d0d0] px-4 py-2 text-left">
-              履修状態
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredItems.map((item: SyllabusItem, index: number) => (
-            <tr
-              key={index}
-              className={`${getStatusBgColor(courseStatuses[item.科目番号])} ${
-                selectedItems.has(item.科目番号)
-                  ? "bg-opacity-70 border-l-4 border-blue-500"
-                  : ""
-              }`}
-            >
-              <td className="border-b border-[#d0d0d0] px-4 py-2">
+      {/* PCではテーブル表示、スマホではアコーディオン表示 */}
+      <div className="hidden md:block">
+        <table className="min-w-full bg-white border border-[#d0d0d0]">
+          <thead>
+            <tr className="bg-[#fafafa]">
+              <th className="border-b border-[#d0d0d0] px-4 py-2 text-left">
                 <input
                   type="checkbox"
-                  checked={selectedItems.has(item.科目番号)}
-                  onChange={(e) =>
-                    toggleSelectItem(item.科目番号, e.target.checked)}
+                  checked={isAllSelected}
+                  onChange={(e) => toggleSelectAll(e.target.checked)}
                   className="w-4 h-4 accent-blue-500"
+                  title="全て選択/解除"
                 />
-              </td>
-              <td className="border-b border-[#d0d0d0] px-4 py-2">
-                {item.本科または専攻科}
-              </td>
-              <td className="border-b border-[#d0d0d0] px-4 py-2">
-                {item.学年}
-              </td>
-              <td className="border-b border-[#d0d0d0] px-4 py-2">
-                {item.授業科目}
-              </td>
-              <td className="border-b border-[#d0d0d0] px-4 py-2">
-                {item.単位数}
-              </td>
-              <td className="border-b border-[#d0d0d0] px-4 py-2">
-                <select
-                  className={`w-full p-2 border border-[#d0d0d0] rounded ${
-                    getSelectBgColor(courseStatuses[item.科目番号])
-                  } focus:ring-2 focus:ring-[#000] focus:outline-none`}
-                  value={courseStatuses[item.科目番号] || "未履修"}
-                  onChange={(e) =>
-                    onStatusChange(
-                      item.科目番号,
-                      e.target.value as CourseStatus,
-                    )}
-                >
-                  <option value="未履修">未履修</option>
-                  <option value="単位取得済み">単位取得済み</option>
-                  <option value="単位なし（F）">単位なし（F）</option>
-                  <option value="履修予定">履修予定</option>
-                  <option value="履修かつF予定">履修かつF予定</option>
-                </select>
-              </td>
+              </th>
+              <th className="border-b border-[#d0d0d0] px-4 py-2 text-left hidden md:table-cell">
+                本科または専攻科
+              </th>
+              <th className="border-b border-[#d0d0d0] px-4 py-2 text-left hidden md:table-cell">
+                学年
+              </th>
+              <th className="border-b border-[#d0d0d0] px-4 py-2 text-left">
+                授業科目
+              </th>
+              <th className="border-b border-[#d0d0d0] px-4 py-2 text-left">
+                単位数
+              </th>
+              <th className="border-b border-[#d0d0d0] px-4 py-2 text-left">
+                履修状態
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {filteredItems.map((item: SyllabusItem, index: number) => (
+              <tr
+                key={index}
+                className={`${
+                  getStatusBgColor(courseStatuses[item.科目番号])
+                } ${
+                  selectedItems.has(item.科目番号)
+                    ? "bg-opacity-70 border-l-4 border-blue-500"
+                    : ""
+                }`}
+              >
+                <td className="border-b border-[#d0d0d0] px-4 py-2">
+                  <input
+                    type="checkbox"
+                    checked={selectedItems.has(item.科目番号)}
+                    onChange={(e) =>
+                      toggleSelectItem(item.科目番号, e.target.checked)}
+                    className="w-4 h-4 accent-blue-500"
+                  />
+                </td>
+                <td className="border-b border-[#d0d0d0] px-4 py-2 hidden md:table-cell">
+                  {item.本科または専攻科}
+                </td>
+                <td className="border-b border-[#d0d0d0] px-4 py-2 hidden md:table-cell">
+                  {item.学年}
+                </td>
+                <td className="border-b border-[#d0d0d0] px-4 py-2">
+                  {item.授業科目}
+                </td>
+                <td className="border-b border-[#d0d0d0] px-4 py-2">
+                  {item.単位数}
+                </td>
+                <td className="border-b border-[#d0d0d0] px-4 py-2">
+                  <select
+                    className={`w-full p-2 border border-[#d0d0d0] rounded ${
+                      getSelectBgColor(courseStatuses[item.科目番号])
+                    } focus:ring-2 focus:ring-[#000] focus:outline-none`}
+                    value={courseStatuses[item.科目番号] || "未履修"}
+                    onChange={(e) =>
+                      onStatusChange(
+                        item.科目番号,
+                        e.target.value as CourseStatus,
+                      )}
+                  >
+                    <option value="未履修">未履修</option>
+                    <option value="単位取得済み">単位取得済み</option>
+                    <option value="単位なし（F）">単位なし（F）</option>
+                    <option value="履修予定">履修予定</option>
+                    <option value="履修かつF予定">履修かつF予定</option>
+                  </select>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* スマホ表示用アコーディオンリスト */}
+      <div className="md:hidden">
+        <div className="border border-[#d0d0d0] rounded-lg overflow-hidden bg-white">
+          {filteredItems.map((item: SyllabusItem, index: number) => {
+            const isExpanded = expandedRows.has(item.科目番号);
+            return (
+              <div
+                key={index}
+                className={`border-b border-[#d0d0d0] last:border-b-0 ${
+                  getStatusBgColor(courseStatuses[item.科目番号])
+                } ${
+                  selectedItems.has(item.科目番号)
+                    ? "bg-opacity-70 border-l-4 border-blue-500"
+                    : ""
+                }`}
+              >
+                {/* ヘッダー部分 - 常に表示 */}
+                <div
+                  className="flex items-center justify-between p-3 cursor-pointer"
+                  onClick={() => toggleRowExpand(item.科目番号)}
+                >
+                  <div className="flex items-center flex-1">
+                    <input
+                      type="checkbox"
+                      checked={selectedItems.has(item.科目番号)}
+                      onChange={(e) => {
+                        e.stopPropagation();
+                        toggleSelectItem(item.科目番号, e.target.checked);
+                      }}
+                      className="w-4 h-4 accent-blue-500 mr-3"
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                    <div className="flex-1">
+                      <div className="font-medium">{item.授業科目}</div>
+                      <div className="text-sm text-gray-600">
+                        {item.単位数}単位
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center">
+                    <select
+                      className={`mr-3 p-2 border border-[#d0d0d0] rounded ${
+                        getSelectBgColor(courseStatuses[item.科目番号])
+                      } focus:ring-2 focus:ring-[#000] focus:outline-none`}
+                      value={courseStatuses[item.科目番号] || "未履修"}
+                      onChange={(e) => {
+                        e.stopPropagation();
+                        onStatusChange(
+                          item.科目番号,
+                          e.target.value as CourseStatus,
+                        );
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <option value="未履修">未履修</option>
+                      <option value="単位取得済み">単位取得済み</option>
+                      <option value="単位なし（F）">単位なし（F）</option>
+                      <option value="履修予定">履修予定</option>
+                      <option value="履修かつF予定">履修かつF予定</option>
+                    </select>
+
+                    <svg
+                      className={`w-5 h-5 transform transition-transform duration-200 ${
+                        isExpanded ? "rotate-180" : ""
+                      }`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </div>
+                </div>
+
+                {/* 詳細情報 - 展開時のみ表示 */}
+                <div
+                  className={`px-4 pb-3 pt-0 transition-all duration-200 ${
+                    isExpanded
+                      ? "max-h-36 opacity-100"
+                      : "max-h-0 opacity-0 overflow-hidden"
+                  }`}
+                >
+                  <div className="border-t border-gray-200 pt-2 text-sm">
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="text-gray-600">本科または専攻科:</div>
+                      <div>{item.本科または専攻科}</div>
+
+                      <div className="text-gray-600">学年:</div>
+                      <div>{item.学年}</div>
+
+                      <div className="text-gray-600">科目区分:</div>
+                      <div>{item.科目区分1}</div>
+
+                      <div className="text-gray-600">科目番号:</div>
+                      <div>{item.科目番号}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 };
