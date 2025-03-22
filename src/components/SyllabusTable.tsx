@@ -19,6 +19,7 @@ export const SyllabusTable: React.FC<SyllabusTableProps> = ({
   // フィルターの状態
   const [courseTypeFilter, setCourseTypeFilter] = useState<string>("すべて");
   const [gradeFilter, setGradeFilter] = useState<string>("すべて");
+  const [categoryFilter, setCategoryFilter] = useState<string>("すべて");
 
   // 選択状態の管理
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
@@ -31,6 +32,15 @@ export const SyllabusTable: React.FC<SyllabusTableProps> = ({
       types.add(item.本科または専攻科);
     });
     return ["すべて", ...Array.from(types)];
+  }, [syllabusItems]);
+
+  // 科目区分（専門/一般）の一覧を取得
+  const categories = useMemo(() => {
+    const cats = new Set<string>();
+    syllabusItems.forEach((item) => {
+      cats.add(item.科目区分1);
+    });
+    return ["すべて", ...Array.from(cats)];
   }, [syllabusItems]);
 
   // 学年の一覧を取得
@@ -53,6 +63,14 @@ export const SyllabusTable: React.FC<SyllabusTableProps> = ({
         return false;
       }
 
+      // 科目区分（専門/一般）でフィルタリング
+      if (
+        categoryFilter !== "すべて" &&
+        item.科目区分1 !== categoryFilter
+      ) {
+        return false;
+      }
+
       // 学年でフィルタリング
       if (gradeFilter !== "すべて" && item.学年 !== gradeFilter) {
         return false;
@@ -60,7 +78,7 @@ export const SyllabusTable: React.FC<SyllabusTableProps> = ({
 
       return true;
     });
-  }, [syllabusItems, courseTypeFilter, gradeFilter]);
+  }, [syllabusItems, courseTypeFilter, categoryFilter, gradeFilter]);
 
   // 全て選択/解除の処理
   const toggleSelectAll = (isSelected: boolean) => {
@@ -154,7 +172,7 @@ export const SyllabusTable: React.FC<SyllabusTableProps> = ({
       <div className="mb-4 flex flex-wrap gap-4">
         <div className="flex items-center">
           <label htmlFor="courseTypeFilter" className="mr-2 font-medium">
-            区分:
+            本科/専攻科:
           </label>
           <select
             id="courseTypeFilter"
@@ -180,6 +198,22 @@ export const SyllabusTable: React.FC<SyllabusTableProps> = ({
           >
             {grades.map((grade: string) => (
               <option key={grade} value={grade}>{grade}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className="flex items-center">
+          <label htmlFor="categoryFilter" className="mr-2 font-medium">
+            一般/専門:
+          </label>
+          <select
+            id="categoryFilter"
+            className="p-2 border border-[#d0d0d0] rounded bg-white focus:ring-2 focus:ring-[#000] focus:outline-none"
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value)}
+          >
+            {categories.map((category: string) => (
+              <option key={category} value={category}>{category}</option>
             ))}
           </select>
         </div>
