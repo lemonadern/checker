@@ -1,19 +1,102 @@
-# Vite + Deno + React + TypeScript
+# 豊田高専 卒業要件チェッカー
 
-## Running
+豊田高専の学生向けの卒業要件・JABEE要件を簡単にチェックできるWebアプリケーションです。科目の履修状態を入力するだけで、卒業やJABEE認定に必要な要件を満たしているかを自動的に判定します。
 
-You need to have Deno v2.0.0 or later installed to run this repo.
+## 機能一覧
 
-Start a dev server:
+- **卒業要件自動判定**: 入力された履修状況から、卒業要件を満たしているか自動判定
+- **JABEE要件チェック**: JABEE認定プログラムの要件を満たしているか確認
+- **複数選択・一括更新**: 科目を複数選択して一括で履修状態を変更可能
+- **フィルター機能**: 本科/専攻科、学年などでフィルタリング可能
+- **要件フィルター**: 合格/不合格の要件だけを表示できるフィルター機能
+- **データ保存**: 入力した履修状態はブラウザのlocalStorageに保存され、次回アクセス時に復元
 
-```
+## 使い方
+
+1. シラバスデータ一覧から履修状態を設定
+   - 「未履修」「単位取得済み」「単位なし（F）」「履修予定」「履修かつF予定」から選択
+   - 複数科目を選択して一括更新も可能
+2. 右側の卒業要件チェッカーで結果を確認
+   - 「すべて」「合格のみ」「不合格のみ」から表示する要件を選択可能
+3. 各要件の詳細を確認
+   - 取得済み・履修予定の科目や未取得の科目などを確認
+
+## 対応している要件
+
+- 専攻科終了要件
+- 専攻科各科目区分の単位要件
+- JABEE人文・社会科学系科目要件
+- JABEE英語科目要件
+- JABEE数学・自然科学系科目要件
+- JABEE情報技術系科目要件
+- JABEEコンピュータアーキテクチャ要件
+- 「情報科学」教育プログラムにおける必修科目
+- その他、JABEEプログラムの各専門科目群の要件
+
+## 科目情報および要件の出典
+### 科目情報
+- 高専Webシラバス 豊田工業高等専門学校 専攻科 情報科学専攻 令和6年度
+  - https://syllabus.kosen-k.go.jp/Pages/PublicSubjects?school_id=23&department_id=25&year=2024&lang=ja
+  - [syllabus_j.csv](./public/data/syllabus_j.csv) として利用
+- 高専Webシラバス 豊田工業高等専門学校 情報工学科 令和5年度 （5年の教科のみ）
+  - https://syllabus.kosen-k.go.jp/Pages/PublicSubjects?school_id=23&department_id=13&year=2023&lang=ja
+  - [syllabus_i5_r5.csv](./public/data/syllabus_i5_r5.csv) として利用
+- 高専Webシラバス 豊田工業高等専門学校 情報工学科 令和4年度 （4年の教科のみ）
+  - https://syllabus.kosen-k.go.jp/Pages/PublicSubjects?school_id=23&department_id=13&year=2022&lang=ja
+  - [syllabus_i4_r4.csv](./public/data/syllabus_i4_r4.csv) として利用
+  
+### 専攻科修了要件
+[豊田工業高等専門学校専攻科の単位の修得に関する規程（制定: 平成6年4月1日, 最終改正: 令和5年4月1日）](https://www.toyota-ct.ac.jp/wp/wp-content/uploads/2024/05/1e4fa6f1cc1d9371b03d5cf6a0c88648.pdf)
+
+p.1 第二条（修了要件）
+> 学則第 42 条第１項に定める授業科目のうちから計 62 単位以上を修得しなければな
+らない。ただし，一般科目にあっては 10 単位，専門関連科目にあっては 12 単位以上，
+専門科目にあっては 36 単位以上を含むものとする。
+
+
+[豊田工業高等専門学校学則（制定: 昭和38年4月1日, 最終改正: 令和6年3月19日）](https://www.toyota-ct.ac.jp/wp/wp-content/uploads/2024/05/4345fce60604665e3b6d210ddb19ef59.pdf)
+
+p.7 第42条
+> 第 4 2 条 専攻科に開設する授業科目及びその単位数は， 別表第４－１，別表第４－２及び別表第４－３のとおりとする。
+
+p.50-51 別表第４－２（第４２条関係）　 (令和４年度以降令和７年度以前入学者適用分) をもとに作成
+
+以上のドキュメントには 「[情報公開 \| 豊田高専](https://www.toyota-ct.ac.jp/about/disclosure/), 学修成果に係る評価、卒業・修了の認定基準」 からアクセス可能
+
+### JABEE要件
+[「情報科学」教育プログラム 履修の手引き](https://www.ice.toyota-ct.ac.jp/JABEE/tebiki_R03_45J1.pdf) より作成
+
+## 開発者向け情報
+
+### 技術スタック
+
+- **フロントエンド**: React + TypeScript
+- **ビルドツール**: Vite
+- **ランタイム**: Deno
+- **スタイリング**: Tailwind CSS
+
+### セットアップ
+
+Deno v2.0.0以降がインストールされている必要があります。
+
+開発サーバーの起動:
+
+```bash
 $ deno task dev
 ```
 
-## Deploy
+本番用アセットのビルド:
 
-Build production assets:
-
-```
+```bash
 $ deno task build
 ```
+
+### 主なディレクトリ構成
+
+- `src/`: ソースコード
+  - `components/`: Reactコンポーネント
+  - `requirements/`: 卒業要件チェック関連のロジック
+    - `rules/`: 各種要件の判定ルール
+  - `types.ts`: 型定義
+- `public/`: 静的ファイル
+  - `data/`: シラバスデータCSV
